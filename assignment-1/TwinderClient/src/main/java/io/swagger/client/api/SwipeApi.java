@@ -149,6 +149,12 @@ public class SwipeApi {
         return apiClient.execute(call);
     }
 
+    // Swipe that enables client to see what is returned as the response body
+    public ApiResponse<Void> swipeWithResponseBody(SwipeDetails body, String leftorright) throws ApiException {
+        com.squareup.okhttp.Call call = swipeValidateBeforeCall(body, leftorright, null, null);
+        return apiClient.execute(call, String.class);
+    }
+
     /**
      *  (asynchronously)
      * Swipe left or right
