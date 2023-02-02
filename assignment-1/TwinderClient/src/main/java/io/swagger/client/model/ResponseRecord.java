@@ -8,11 +8,10 @@ public class ResponseRecord {
   private long latency;
   private int responseCode;
 
-  public ResponseRecord(long startTime, String requestType, long latency,
-      int responseCode) {
+  public ResponseRecord(long startTime, long latency, String requestType, int responseCode) {
     this.startTime = startTime;
-    this.requestType = requestType;
     this.latency = latency;
+    this.requestType = requestType;
     this.responseCode = responseCode;
   }
 
