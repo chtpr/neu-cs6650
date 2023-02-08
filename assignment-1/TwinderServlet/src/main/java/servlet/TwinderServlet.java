@@ -43,6 +43,7 @@ public class TwinderServlet extends HttpServlet {
       HttpServletResponse res) throws ServletException, IOException {
 
     res.setContentType("text/plain");
+    // should be /swipe/leftorright/
     String urlPath = req.getPathInfo();
 
     // check we have a URL!
@@ -65,18 +66,31 @@ public class TwinderServlet extends HttpServlet {
     }
   }
 
-  private boolean isUrlValid(String[] urlPath) {
-    if (urlPath.length < 2) {
+  /**
+   * Checks if url is valid. urlParts[0] should be "", urlParts[1] should be
+   * "swipe", and urlParts[2] should be "left" or "right"
+   * @param urlParts the url parts
+   * @return true if url is valid, false if not
+   */
+  private boolean isUrlValid(String[] urlParts) {
+    if (urlParts.length != 3) {
       return false;
     }
-    if (!Objects.equals(urlPath[1], "swipe")) {
+    if (!Objects.equals(urlParts[1], "swipe")) {
       return false;
     }
     Pattern leftOrRight = Pattern.compile("^left|right$");
-    Matcher matcher = leftOrRight.matcher(urlPath[2]);
+    Matcher matcher = leftOrRight.matcher(urlParts[2]);
     return matcher.find();
   }
 
+  /**
+   * Reads the request body and writes it back as a response to confirm the
+   * given swipe details (swiper, swipee, comment)
+   * @param request the request body
+   * @param response the response that writes back the swipe details given by
+   *                 the request body
+   */
   private void processRequest(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 

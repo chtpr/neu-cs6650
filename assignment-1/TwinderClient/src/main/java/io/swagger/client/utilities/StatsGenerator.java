@@ -1,14 +1,29 @@
 package io.swagger.client.utilities;
 
+import static io.swagger.client.constants.EnvironmentConstants.NUM_THREADS;
+import static io.swagger.client.constants.EnvironmentConstants.TOTAL_REQUESTS;
+
 import io.swagger.client.model.ResponseRecord;
 import java.util.List;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+/**
+ * Utility class for generating and printing stats
+ */
 public final class StatsGenerator {
 
   private StatsGenerator() {}
 
-  public static void printStats(List<ResponseRecord> responseRecordList) {
+  public static void printGeneralStats(int successfulRequests, double wallTime) {
+    System.out.printf("Number of threads: %d%n", NUM_THREADS);
+    System.out.printf("Number of successful requests: %d%n", successfulRequests);
+    System.out.printf("Number of unsuccessful requests: %d%n", TOTAL_REQUESTS - successfulRequests);
+    System.out.printf("Wall time: %f seconds%n", wallTime);
+    System.out.printf("Requests per second: %f%n", TOTAL_REQUESTS / wallTime);
+    System.out.println();
+  }
+
+  public static void printLatencyStats(List<ResponseRecord> responseRecordList) {
     DescriptiveStatistics stats = new DescriptiveStatistics();
     for (ResponseRecord record : responseRecordList) {
       stats.addValue(record.getLatency());

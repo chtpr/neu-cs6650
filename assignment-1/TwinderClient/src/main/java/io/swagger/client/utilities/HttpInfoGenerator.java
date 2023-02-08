@@ -3,6 +3,9 @@ package io.swagger.client.utilities;
 import io.swagger.client.model.SwipeDetails;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Utility class for generating HTTP info
+ */
 public final class HttpInfoGenerator {
 
   private HttpInfoGenerator() {}

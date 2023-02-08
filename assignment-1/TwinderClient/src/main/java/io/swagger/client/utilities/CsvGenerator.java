@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for generating CSVs
+ */
 public final class CsvGenerator {
 
   private static final String[] RESPONSE_RECORD_HEADER = {"StartTime", "Latency", "RequestType", "ResponseCode"};

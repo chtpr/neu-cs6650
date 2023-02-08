@@ -2,6 +2,10 @@ package io.swagger.client.model;
 
 import java.util.Comparator;
 
+/**
+ * Class for keeping a record of the start time, latency, request type, and
+ * response code of the response.
+ */
 public class ResponseRecord {
   private long startTime;
   private String requestType;

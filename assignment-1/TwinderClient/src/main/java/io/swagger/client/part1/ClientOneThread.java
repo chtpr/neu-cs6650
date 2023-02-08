@@ -13,6 +13,10 @@ import io.swagger.client.utilities.HttpInfoGenerator;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Thread that sends the number of requests specified. Increments the success
+ * counter for every successful request sent and retrieved.
+ */
 public class ClientOneThread implements Runnable {
   private CountDownLatch latch;
   private AtomicInteger successCount;
@@ -33,6 +37,12 @@ public class ClientOneThread implements Runnable {
     latch.countDown();
   }
 
+  /**
+   * Tries sending a request (max 5 attempts) with the requisite http info and
+   * increments the success count if successful
+   * @param successCount keeps track of how many successful requests have been sent
+   * @param apiInstance the swipe api instance
+   */
   private void sendRequest(AtomicInteger successCount, SwipeApi apiInstance) {
     for (int k = 0; k < ATTEMPTS; k++) {
       try {

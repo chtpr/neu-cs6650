@@ -16,6 +16,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Thread that sends the number of requests specified. It retrieves the
+ * responses in its own list, and then once all have been recorded, adds them
+ * all to the global response record list.
+ */
 public class ClientTwoThread implements Runnable {
   private CountDownLatch latch;
   private List<ResponseRecord> responseRecordList;
@@ -38,6 +43,12 @@ public class ClientTwoThread implements Runnable {
     latch.countDown();
   }
 
+  /**
+   * Tries sending a request (max 5 attempts) with the requisite http info and
+   * adds a record of the response to the local list if successful
+   * @param localSublist the local list in the thread
+   * @param apiInstance the swipe api instance
+   */
   private void sendRequest(List<ResponseRecord> localSublist, SwipeApi apiInstance) {
     for (int k = 0; k < ATTEMPTS; k++) {
       try {

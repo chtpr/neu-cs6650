@@ -13,6 +13,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Client for part 2
+ */
 public class ClientTwo {
 
   private static final String RECORD_FILENAME = "/Users/christopherlee/NEU/neu-cs6650/assignment-1/TwinderClient/csvresults/responsedata.csv";
@@ -31,27 +34,21 @@ public class ClientTwo {
 
     long end = System.currentTimeMillis();
     double wallTime = (end - start) / 1000f;
-    System.out.printf("Wall time: %f seconds%n", wallTime);
-    System.out.printf("Number of successful requests: %d%n", responseRecordList.size());
-    System.out.printf("Number of unsuccessful requests: %d%n", (TOTAL_REQUESTS - responseRecordList.size()));
-    System.out.printf("Requests per second: %f%n", (TOTAL_REQUESTS / wallTime));
-    System.out.println();
+    StatsGenerator.printGeneralStats(responseRecordList.size(), wallTime);
 
     responseRecordList.sort(new StartTimeComparator());
     long firstTime = responseRecordList.get(0).getStartTime();
     long lastTime = responseRecordList.get(responseRecordList.size() - 1).getStartTime();
+    // create an array with a size equivalent to the number of seconds elapsed
+    // plus one to account for index starting at zero
     int[] throughputIntervals = new int[(int) ((lastTime - firstTime)/1000 + 1)];
+    // uses the start time of every response record to count the number of requests
+    // for each second of the run
     for (ResponseRecord record : responseRecordList) {
       throughputIntervals[(int) (record.getStartTime() - firstTime)/1000] += 1;
     }
 
-    System.out.printf("First start time: %d milliseconds%n", firstTime);
-    System.out.printf("Final start time: %d milliseconds%n", lastTime);
-    System.out.printf("Last and first start time gap: %d milliseconds%n", lastTime - firstTime);
-    System.out.printf("Number of second intervals: %d%n", throughputIntervals.length);
-    System.out.println();
-
-    StatsGenerator.printStats(responseRecordList);
+    StatsGenerator.printLatencyStats(responseRecordList);
     CsvGenerator.writeResponseRecordCsv(responseRecordList, RECORD_FILENAME);
     CsvGenerator.writeThroughputIntervalsCsv(throughputIntervals, INTERVAL_FILENAME);
   }

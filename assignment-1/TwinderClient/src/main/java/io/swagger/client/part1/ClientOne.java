@@ -1,13 +1,16 @@
 package io.swagger.client.part1;
 
 import static io.swagger.client.constants.EnvironmentConstants.NUM_THREADS;
-import static io.swagger.client.constants.EnvironmentConstants.TOTAL_REQUESTS;
 
+import io.swagger.client.utilities.StatsGenerator;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Client for part one
+ */
 public class ClientOne {
 
   public static void main(String[] args) throws InterruptedException {
@@ -24,9 +27,6 @@ public class ClientOne {
 
     long end = System.currentTimeMillis();
     double wallTime = (end - start) / 1000f;
-    System.out.printf("Wall time: %f seconds%n", wallTime);
-    System.out.printf("Number of successful requests: %d%n", successCount.get());
-    System.out.printf("Number of unsuccessful requests: %d%n", (TOTAL_REQUESTS - successCount.get()));
-    System.out.printf("Requests per second: %f%n", (TOTAL_REQUESTS / wallTime));
+    StatsGenerator.printGeneralStats(successCount.get(), wallTime);
   }
 }
