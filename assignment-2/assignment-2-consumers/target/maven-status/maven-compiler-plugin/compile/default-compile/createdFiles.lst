@@ -1,0 +1,5 @@
+model/Swipe.class
+consumer/ConsumerMatches.class
+consumer/LikesDislikesThread.class
+consumer/ConsumerLikesDislikes.class
+consumer/MatchListThread.class

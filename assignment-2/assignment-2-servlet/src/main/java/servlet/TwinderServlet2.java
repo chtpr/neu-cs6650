@@ -26,7 +26,7 @@ public class TwinderServlet2 extends HttpServlet {
   private static final String EXCHANGE_NAME = "SwipeExchange";
   private static final int NUM_CHANNELS = 200;
   private static final String LOCAL_HOST = "localhost";
-  private static final String AWS_PUBLIC = "35.92.116.67";
+  private static final String AWS_PUBLIC = "35.88.142.170";
   private static final String AWS_PRIVATE = "172.31.25.91";
   private Connection connection;
   private RMQChannelPool pool;
