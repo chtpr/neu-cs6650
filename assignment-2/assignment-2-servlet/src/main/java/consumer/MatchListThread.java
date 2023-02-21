@@ -12,7 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import model.Swipe;
 
 public class MatchListThread implements Runnable {
-  private static final String QUEUE_NAME = "SwipeQueue";
+  private static final String QUEUE_NAME = "MatchesQueue";
+  private static final String EXCHANGE_NAME = "SwipeExchange";
+
   private Connection connection;
   private ConcurrentHashMap<String, List<String>> map;
 
@@ -33,8 +35,8 @@ public class MatchListThread implements Runnable {
   private void consume() throws IOException {
     Channel channel = connection.createChannel();
     channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-//    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-    channel.basicQos(1);
+    channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+    channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
     DeliverCallback deliverCallback = (consumerTag, delivery) -> {
       String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
       addToMatchList(message);

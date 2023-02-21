@@ -24,9 +24,10 @@ public class TwinderServlet2 extends HttpServlet {
 
   private static final String QUEUE_NAME = "SwipeQueue";
   private static final String EXCHANGE_NAME = "SwipeExchange";
-  private static final int NUM_CHANNELS = 100;
+  private static final int NUM_CHANNELS = 200;
   private static final String LOCAL_HOST = "localhost";
-  private static final String AWS_HOST = "34.217.206.210";
+  private static final String AWS_PUBLIC = "35.92.116.67";
+  private static final String AWS_PRIVATE = "172.31.25.91";
   private Connection connection;
   private RMQChannelPool pool;
 
@@ -36,7 +37,7 @@ public class TwinderServlet2 extends HttpServlet {
   public void init() {
     ConnectionFactory connectionFactory = new ConnectionFactory();
 //    connectionFactory.setHost(LOCAL_HOST);
-    connectionFactory.setHost(AWS_HOST);
+    connectionFactory.setHost(AWS_PRIVATE);
     connectionFactory.setUsername("test");
     connectionFactory.setPassword("test");
     try {
@@ -156,13 +157,12 @@ public class TwinderServlet2 extends HttpServlet {
     String swipeJson = gson.toJson(swipe);
     try {
       Channel channel = pool.borrowObject();
-      //channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
 //      channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 //      channel.basicPublish("", QUEUE_NAME, null, swipeJson.getBytes());
-      //channel.basicPublish(EXCHANGE_NAME, "", null, swipeJson.getBytes());
+      channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+      channel.basicPublish(EXCHANGE_NAME, "", null, swipeJson.getBytes());
       pool.returnObject(channel);
       response.getWriter().write(String.valueOf(response.getStatus()));
-      //System.out.println("Sent message");
     } catch (Exception e) {
       Logger.getLogger(TwinderServlet2.class.getName()).log(Level.INFO, null, e);
     }

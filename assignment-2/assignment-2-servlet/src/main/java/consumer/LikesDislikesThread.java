@@ -7,13 +7,13 @@ import com.rabbitmq.client.DeliverCallback;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
 import model.Swipe;
 
 public class LikesDislikesThread implements Runnable {
 
-  private static final String QUEUE_NAME = "SwipeQueue";
+  private static final String QUEUE_NAME = "LikesDislikes";
+  private static final String EXCHANGE_NAME = "SwipeExchange";
+
   private Connection connection;
   private ConcurrentHashMap<String, int[]> map;
 
@@ -35,12 +35,11 @@ public class LikesDislikesThread implements Runnable {
     Channel channel = connection.createChannel();
 
     channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-//    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-    channel.basicQos(1);
+    channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+    channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
     DeliverCallback deliverCallback = (consumerTag, delivery) -> {
     String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
     addToLikesDislikes(message);
-//      System.out.println(" [x] Received '" + message + "'");
     };
     channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {
     });
