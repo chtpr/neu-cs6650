@@ -2,6 +2,7 @@ package io.swagger.client.part2;
 
 import static io.swagger.client.constants.EnvironmentConstants.ATTEMPTS;
 import static io.swagger.client.constants.EnvironmentConstants.AWS_PATH;
+import static io.swagger.client.constants.EnvironmentConstants.AWS_PATH_2;
 import static io.swagger.client.constants.EnvironmentConstants.NUM_REQUESTS;
 
 import io.swagger.client.ApiClient;
@@ -33,7 +34,7 @@ public class ClientTwoThread implements Runnable {
   @Override
   public void run() {
     ApiClient apiClient = new ApiClient();
-    apiClient.setBasePath(AWS_PATH);
+    apiClient.setBasePath(AWS_PATH_2);
     SwipeApi apiInstance = new SwipeApi(apiClient);
     List<ResponseRecord> localSublist = Collections.synchronizedList(new ArrayList<>());
     for (int j = 0; j < NUM_REQUESTS; j++) {

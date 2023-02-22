@@ -30,6 +30,7 @@ public class TwinderServlet2 extends HttpServlet {
   private static final String AWS_PRIVATE = "172.31.25.91";
   private Connection connection;
   private RMQChannelPool pool;
+  private static final Gson gson = new Gson();
 
 
 
@@ -74,20 +75,26 @@ public class TwinderServlet2 extends HttpServlet {
     }
 
     String[] urlParts = urlPath.split("/");
+    SwipeDetails swipeDetails = parseSwipeDetails(req);
 
     // and now validate url path and return the response status code
     // (and maybe also some value if input is valid)
-    if (!isUrlValid(urlParts)) {
+    if (!isUrlValid(urlParts) || !isRequestBodyValid(swipeDetails)) {
       res.setStatus(HttpServletResponse.SC_NOT_FOUND);
     } else {
       res.setStatus(HttpServletResponse.SC_CREATED);
       // do any sophisticated processing with urlParts which contains all the url params
       try {
-        processRequest(req, res, urlParts[2]);
+        processRequest(res, urlParts[2], swipeDetails);
       } catch (Exception e) {
         e.printStackTrace();
       }
     }
+  }
+
+  private SwipeDetails parseSwipeDetails(HttpServletRequest request)
+      throws IOException {
+    return gson.fromJson(request.getReader(), SwipeDetails.class);
   }
 
   /**
@@ -108,30 +115,38 @@ public class TwinderServlet2 extends HttpServlet {
     return matcher.find();
   }
 
-  /**
-   * Reads the request body and writes it back as a response to confirm the
-   * given swipe details (swiper, swipee, comment)
-   * @param request the request body
-   * @param response the response that writes back the swipe details given by
-   *                 the request body
-   */
-  private void processRequest(HttpServletRequest request, HttpServletResponse response, String swipeDirection)
-      throws Exception {
-
-    Gson gson = new Gson();
-    SwipeDetails swipeDetails = gson.fromJson(request.getReader(), SwipeDetails.class);
-    Swipe swipe = new Swipe(swipeDirection, swipeDetails.getSwiper(), swipeDetails.getSwipee(), swipeDetails.getComment());
-    String swipeJson = gson.toJson(swipe);
-    publish(response, swipeJson);
+  private boolean isRequestBodyValid(SwipeDetails swipeDetails) {
+    return (checkRange(swipeDetails.getSwiper(), 0, 5000) &&
+        checkRange(swipeDetails.getSwipee(), 0, 1000000) &&
+        swipeDetails.getComment().length() <= 256);
   }
 
-  private void publish(HttpServletResponse response, String message) {
+  private boolean checkRange(String id, int lower, int upper) {
+    int value = Integer.parseInt(id);
+    return (lower <= value && value <= upper);
+  }
+
+  /**
+   * Reads the request body and publishes it to RabbitMQ. Writes back the status
+   * if successful.
+   * @param response the HTTP response that writes back the status code
+   * @param swipeDirection the swipe direction
+   * @param swipeDetails the swipe details
+   */
+  private void processRequest(HttpServletResponse response, String swipeDirection, SwipeDetails swipeDetails)
+      throws IOException {
+    Swipe swipe = new Swipe(swipeDirection, swipeDetails.getSwiper(), swipeDetails.getSwipee(), swipeDetails.getComment());
+    String swipeJson = gson.toJson(swipe);
+    publish(swipeJson);
+    response.getWriter().write(String.valueOf(response.getStatus()));
+  }
+
+  private void publish(String message) {
     try {
       Channel channel = pool.borrowObject();
       channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
       channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes());
       pool.returnObject(channel);
-      response.getWriter().write(String.valueOf(response.getStatus()));
     } catch (Exception e) {
       Logger.getLogger(TwinderServlet2.class.getName()).log(Level.INFO, null, e);
     }
