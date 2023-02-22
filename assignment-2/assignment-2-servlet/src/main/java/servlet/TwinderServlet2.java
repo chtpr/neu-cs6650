@@ -58,33 +58,6 @@ public class TwinderServlet2 extends HttpServlet {
     }
   }
 
-  // just to quickly test we have connection
-  @Override
-  protected void doGet(HttpServletRequest req,
-      HttpServletResponse res) throws ServletException, IOException {
-
-    res.setContentType("text/plain");
-    String urlPath = req.getPathInfo();
-
-    // check we have a URL!
-    if (urlPath == null || urlPath.isEmpty()) {
-      res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      res.getWriter().write("Missing parameters");
-      return;
-    }
-
-    String[] urlParts = urlPath.split("/");
-
-    // and now validate url path and return the response status code
-    // (and maybe also some value if input is valid)
-    if (!isUrlValid(urlParts)) {
-      res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    } else {
-      res.setStatus(HttpServletResponse.SC_OK);
-      res.getWriter().write("Get works!");
-    }
-  }
-
   @Override
   protected void doPost(HttpServletRequest req,
       HttpServletResponse res) throws ServletException, IOException {
@@ -135,10 +108,6 @@ public class TwinderServlet2 extends HttpServlet {
     return matcher.find();
   }
 
-  private boolean validateRequestBody(Swipe swipe) {
-    return true;
-  }
-
   /**
    * Reads the request body and writes it back as a response to confirm the
    * given swipe details (swiper, swipee, comment)
@@ -152,15 +121,15 @@ public class TwinderServlet2 extends HttpServlet {
     Gson gson = new Gson();
     SwipeDetails swipeDetails = gson.fromJson(request.getReader(), SwipeDetails.class);
     Swipe swipe = new Swipe(swipeDirection, swipeDetails.getSwiper(), swipeDetails.getSwipee(), swipeDetails.getComment());
-//    response.setContentType("application/json");
-//    response.getWriter().write(gson.toJson(swipe));
     String swipeJson = gson.toJson(swipe);
+    publish(response, swipeJson);
+  }
+
+  private void publish(HttpServletResponse response, String message) {
     try {
       Channel channel = pool.borrowObject();
-//      channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-//      channel.basicPublish("", QUEUE_NAME, null, swipeJson.getBytes());
       channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
-      channel.basicPublish(EXCHANGE_NAME, "", null, swipeJson.getBytes());
+      channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes());
       pool.returnObject(channel);
       response.getWriter().write(String.valueOf(response.getStatus()));
     } catch (Exception e) {

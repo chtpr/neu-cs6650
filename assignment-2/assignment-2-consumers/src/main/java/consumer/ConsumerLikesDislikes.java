@@ -14,7 +14,7 @@ public class ConsumerLikesDislikes {
 
   public static void main(String[] argv) throws Exception {
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setHost(AWS_PUBLIC);
+    factory.setHost(AWS_PRIVATE);
     factory.setUsername("test");
     factory.setPassword("test");
     Connection connection = factory.newConnection();

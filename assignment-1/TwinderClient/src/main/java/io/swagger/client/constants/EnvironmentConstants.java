@@ -9,7 +9,7 @@ package io.swagger.client.constants;
 public final class EnvironmentConstants {
   public static final String LOCAL_PATH = "http://localhost:8080/twinderservlet/";
   public static final String LOCAL_PATH_HW2 = "http://localhost:8080/twinderservlet2/";
-  public static final String IP_ADDRESS = "35.160.56.74";
+  public static final String IP_ADDRESS = "34.208.59.63";
   public static final String AWS_PATH = String.format("http://%s:8080/twinderservlet/", IP_ADDRESS);
   public static final String AWS_PATH_2 = String.format("http://%s:8080/twinderservlet2/", IP_ADDRESS);
   public static final int NUM_THREADS = 100;
