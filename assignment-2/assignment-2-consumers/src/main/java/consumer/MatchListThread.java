@@ -56,6 +56,9 @@ public class MatchListThread implements Runnable {
       } else {
         matchList = map.get(swipe.getSwiper());
       }
+    if (matchList.size() > 100) {
+      return;
+    }
     matchList.add(swipe.getSwipee());
     map.put(swipe.getSwiper(), matchList);
 //    System.out.println(matchList.get(matchList.size() - 1));

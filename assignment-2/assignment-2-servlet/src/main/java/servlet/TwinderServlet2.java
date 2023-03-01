@@ -82,12 +82,14 @@ public class TwinderServlet2 extends HttpServlet {
     if (!isUrlValid(urlParts) || !isRequestBodyValid(swipeDetails)) {
       res.setStatus(HttpServletResponse.SC_NOT_FOUND);
     } else {
-      res.setStatus(HttpServletResponse.SC_CREATED);
-      // do any sophisticated processing with urlParts which contains all the url params
-      try {
-        processRequest(res, urlParts[2], swipeDetails);
-      } catch (Exception e) {
-        e.printStackTrace();
+      Swipe swipe = new Swipe(urlParts[2], swipeDetails.getSwiper(), swipeDetails.getSwipee(), swipeDetails.getComment());
+      String swipeJson = gson.toJson(swipe);
+      if (publish(swipeJson)) {
+        res.setStatus(HttpServletResponse.SC_CREATED);
+        res.getWriter().write(String.valueOf(res.getStatus()));
+      } else {
+        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        res.getWriter().write("Failed to publish message");
       }
     }
   }
@@ -126,29 +128,16 @@ public class TwinderServlet2 extends HttpServlet {
     return (lower <= value && value <= upper);
   }
 
-  /**
-   * Reads the request body and publishes it to RabbitMQ. Writes back the status
-   * if successful.
-   * @param response the HTTP response that writes back the status code
-   * @param swipeDirection the swipe direction
-   * @param swipeDetails the swipe details
-   */
-  private void processRequest(HttpServletResponse response, String swipeDirection, SwipeDetails swipeDetails)
-      throws IOException {
-    Swipe swipe = new Swipe(swipeDirection, swipeDetails.getSwiper(), swipeDetails.getSwipee(), swipeDetails.getComment());
-    String swipeJson = gson.toJson(swipe);
-    publish(swipeJson);
-    response.getWriter().write(String.valueOf(response.getStatus()));
-  }
-
-  private void publish(String message) {
+  private boolean publish(String message) {
     try {
       Channel channel = pool.borrowObject();
       channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
       channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes());
       pool.returnObject(channel);
+      return true;
     } catch (Exception e) {
       Logger.getLogger(TwinderServlet2.class.getName()).log(Level.INFO, null, e);
+      return false;
     }
   }
 }
