@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Model for a user's swipe info that includes the direction
+ */
 public class Swipe {
 
   private String swipeDirection;

@@ -12,18 +12,19 @@ import java.util.logging.Logger;
 /**
  * A simple RabbitMQ channel pool based on a BlockingQueue implementation
  * Authored by Dr. Ian Gorton
- *
  */
 public class RMQChannelPool {
 
-  // used to store and distribute channels
   private final BlockingQueue<Channel> pool;
-  // fixed size pool
   private int capacity;
-  // used to create channels
   private RMQChannelFactory factory;
 
 
+  /**
+   * Creates a channel pool with the specified number of channels.
+   * @param maxSize the number of channels
+   * @param factory the channel factory
+   */
   public RMQChannelPool(int maxSize, RMQChannelFactory factory) {
     this.capacity = maxSize;
     pool = new LinkedBlockingQueue<>(capacity);
@@ -31,7 +32,7 @@ public class RMQChannelPool {
     for (int i = 0; i < capacity; i++) {
       Channel chan;
       try {
-        chan = factory.create();
+        chan = this.factory.create();
         pool.put(chan);
       } catch (IOException | InterruptedException ex) {
         Logger.getLogger(RMQChannelPool.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,6 +41,9 @@ public class RMQChannelPool {
     }
   }
 
+  /**
+   * Takes channel from the pool
+   */
   public Channel borrowObject() throws IOException {
 
     try {
@@ -49,6 +53,9 @@ public class RMQChannelPool {
     }
   }
 
+  /**
+   * Gives back channel to the pool
+   */
   public void returnObject(Channel channel) throws Exception {
     if (channel != null) {
       pool.add(channel);

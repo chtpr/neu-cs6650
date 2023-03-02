@@ -19,10 +19,12 @@ import java.io.IOException;
 import model.Swipe;
 import model.SwipeDetails;
 
+/**
+ * Servlet for our Twinder application
+ */
 @WebServlet(name = "TwinderServlet2", value = "/*")
 public class TwinderServlet2 extends HttpServlet {
 
-  private static final String QUEUE_NAME = "SwipeQueue";
   private static final String EXCHANGE_NAME = "SwipeExchange";
   private static final int NUM_CHANNELS = 100;
   private static final String LOCAL_HOST = "localhost";
@@ -32,12 +34,14 @@ public class TwinderServlet2 extends HttpServlet {
   private RMQChannelPool pool;
   private static final Gson gson = new Gson();
 
-
-
+  /**
+   * Upon initialization of the servlet, a connection is established to
+   * RabbitMQ. A RabbitMQ channel pool is implemented to prevent channel
+   * turnover.
+   */
   @Override
   public void init() {
     ConnectionFactory connectionFactory = new ConnectionFactory();
-//    connectionFactory.setHost(LOCAL_HOST);
     connectionFactory.setHost(AWS_PRIVATE);
     connectionFactory.setUsername("test");
     connectionFactory.setPassword("test");
@@ -59,6 +63,13 @@ public class TwinderServlet2 extends HttpServlet {
     }
   }
 
+  /**
+   * Executes our post method. Validates the URL and the request body. If valid,
+   * attempts to publish message to RabbitMQ. If successful, sends a successful
+   * response back to the client.
+   * @param req the HTTPServlet request
+   * @param res the HTTPServlet response
+   */
   @Override
   protected void doPost(HttpServletRequest req,
       HttpServletResponse res) throws ServletException, IOException {
@@ -67,23 +78,27 @@ public class TwinderServlet2 extends HttpServlet {
     // should be /swipe/leftorright/
     String urlPath = req.getPathInfo();
 
-    // check we have a URL!
+    // check we have a URL
     if (urlPath == null || urlPath.isEmpty()) {
       res.setStatus(HttpServletResponse.SC_NOT_FOUND);
       res.getWriter().write("Missing parameters");
       return;
     }
 
+    // parse the url path and request body
     String[] urlParts = urlPath.split("/");
-    SwipeDetails swipeDetails = parseSwipeDetails(req);
+    SwipeDetails swipeDetails = gson.fromJson(req.getReader(), SwipeDetails.class);
 
-    // and now validate url path and return the response status code
-    // (and maybe also some value if input is valid)
+    // validate url path and request body
     if (!isUrlValid(urlParts) || !isRequestBodyValid(swipeDetails)) {
       res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      // if valid, attempt to publish message to RabbitMQ
+      // with swipe direction included in the message
     } else {
-      Swipe swipe = new Swipe(urlParts[2], swipeDetails.getSwiper(), swipeDetails.getSwipee(), swipeDetails.getComment());
+      Swipe swipe = new Swipe(urlParts[2], swipeDetails.getSwiper(),
+          swipeDetails.getSwipee(), swipeDetails.getComment());
       String swipeJson = gson.toJson(swipe);
+      // if published, return success back to the client
       if (publish(swipeJson)) {
         res.setStatus(HttpServletResponse.SC_CREATED);
         res.getWriter().write(String.valueOf(res.getStatus()));
@@ -92,11 +107,6 @@ public class TwinderServlet2 extends HttpServlet {
         res.getWriter().write("Failed to publish message");
       }
     }
-  }
-
-  private SwipeDetails parseSwipeDetails(HttpServletRequest request)
-      throws IOException {
-    return gson.fromJson(request.getReader(), SwipeDetails.class);
   }
 
   /**
@@ -117,17 +127,34 @@ public class TwinderServlet2 extends HttpServlet {
     return matcher.find();
   }
 
+  /**
+   * Checks if request body is valid.
+   * @param swipeDetails the swipe details
+   * @return true if request body is valid, false if not
+   */
   private boolean isRequestBodyValid(SwipeDetails swipeDetails) {
     return (checkRange(swipeDetails.getSwiper(), 0, 5000) &&
         checkRange(swipeDetails.getSwipee(), 0, 1000000) &&
         swipeDetails.getComment().length() <= 256);
   }
 
+  /**
+   * Checks if the user id is in the specified range.
+   * @param id the user id
+   * @param lower lower bound
+   * @param upper upper bound
+   * @return true if in range, false if not
+   */
   private boolean checkRange(String id, int lower, int upper) {
     int value = Integer.parseInt(id);
     return (lower <= value && value <= upper);
   }
 
+  /**
+   * Publishes the swipe message to rabbitMQ
+   * @param message the swipe message
+   * @return true if message was published, false if not
+   */
   private boolean publish(String message) {
     try {
       Channel channel = pool.borrowObject();
