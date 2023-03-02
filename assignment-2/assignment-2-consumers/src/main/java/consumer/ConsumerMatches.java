@@ -7,6 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Consumer class for match lists
+ */
 public class ConsumerMatches {
 
   private static final String AWS_PUBLIC = "35.88.142.170";

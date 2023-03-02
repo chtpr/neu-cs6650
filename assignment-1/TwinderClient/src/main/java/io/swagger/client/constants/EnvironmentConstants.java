@@ -11,8 +11,8 @@ public final class EnvironmentConstants {
   public static final String LOCAL_PATH_HW2 = "http://localhost:8080/twinderservlet2/";
   public static final String IP_ADDRESS = "34.219.165.216";
   public static final String IP_ADDRESS_2 = "54.245.140.162";
-  public static final String AWS_PATH = String.format("http://%s:8080/twinderservlet/", IP_ADDRESS);
-  public static final String AWS_PATH_2 = String.format("http://%s:8080/twinderservlet2/", IP_ADDRESS);
+  public static final String AWS_HW1 = String.format("http://%s:8080/twinderservlet/", IP_ADDRESS);
+  public static final String SERVER_1 = String.format("http://%s:8080/twinderservlet2/", IP_ADDRESS);
   public static final String SERVER_2 = String.format("http://%s:8080/twinderservlet2/", IP_ADDRESS_2);
   public static final String LOAD_BALANCER = "http://tomcat-network-acff0945bf37a74d.elb.us-west-2.amazonaws.com/twinderservlet2/";
   public static final int NUM_THREADS = 100;

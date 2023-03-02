@@ -1,8 +1,6 @@
 package io.swagger.client.part2;
 
 import static io.swagger.client.constants.EnvironmentConstants.ATTEMPTS;
-import static io.swagger.client.constants.EnvironmentConstants.AWS_PATH;
-import static io.swagger.client.constants.EnvironmentConstants.AWS_PATH_2;
 import static io.swagger.client.constants.EnvironmentConstants.LOAD_BALANCER;
 import static io.swagger.client.constants.EnvironmentConstants.NUM_REQUESTS;
 

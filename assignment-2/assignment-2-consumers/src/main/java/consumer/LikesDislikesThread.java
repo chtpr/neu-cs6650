@@ -9,6 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
 import model.Swipe;
 
+/**
+ * Thread class for the likes dislikes consumer
+ */
 public class LikesDislikesThread implements Runnable {
 
   private static final String QUEUE_NAME = "LikesDislikes";
@@ -45,11 +48,15 @@ public class LikesDislikesThread implements Runnable {
     });
   }
 
+  /**
+   * Adds to a swiper's likes and dislikes in a hash map. Uses an array to hold
+   * the count, index 0 is dislikes (left), index 1 is likes (right)
+   * @param message the message with the swipe info that we get from RabbitMQ
+   */
   private void addToLikesDislikes(String message) {
     Gson gson = new Gson();
     Swipe swipe = gson.fromJson(message, Swipe.class);
     int[] likesDislikes;
-    // index 0 is dislikes, index 1 is likes
     if (!map.containsKey(swipe.getSwiper())) {
       likesDislikes = new int[2];
     } else {
@@ -61,6 +68,5 @@ public class LikesDislikesThread implements Runnable {
       likesDislikes[0]++;
     }
     map.put(swipe.getSwiper(), likesDislikes);
-//    System.out.println(map.get(swipe.getSwiper())[1]);
   }
 }

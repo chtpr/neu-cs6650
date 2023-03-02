@@ -1,13 +1,8 @@
 package io.swagger.client.part1;
 
 import static io.swagger.client.constants.EnvironmentConstants.ATTEMPTS;
-import static io.swagger.client.constants.EnvironmentConstants.AWS_PATH;
-import static io.swagger.client.constants.EnvironmentConstants.AWS_PATH_2;
 import static io.swagger.client.constants.EnvironmentConstants.LOAD_BALANCER;
-import static io.swagger.client.constants.EnvironmentConstants.LOCAL_PATH;
-import static io.swagger.client.constants.EnvironmentConstants.LOCAL_PATH_HW2;
 import static io.swagger.client.constants.EnvironmentConstants.NUM_REQUESTS;
-import static io.swagger.client.constants.EnvironmentConstants.SERVER_2;
 
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;

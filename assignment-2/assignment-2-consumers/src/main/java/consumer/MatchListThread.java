@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import model.Swipe;
 
+/**
+ * Thread class for the match list consumer
+ */
 public class MatchListThread implements Runnable {
   private static final String QUEUE_NAME = "MatchesQueue";
   private static final String EXCHANGE_NAME = "SwipeExchange";
@@ -46,6 +49,11 @@ public class MatchListThread implements Runnable {
 
   }
 
+  /**
+   * Adds to a swiper's match list (users that the swiper has swiped right on)
+   * in a hash map. The match list only holds up to 100 matches
+   * @param message the message with the swipe info that we get from RabbitMQ
+   */
   private void addToMatchList(String message) {
     Gson gson = new Gson();
     Swipe swipe = gson.fromJson(message, Swipe.class);
@@ -61,7 +69,6 @@ public class MatchListThread implements Runnable {
     }
     matchList.add(swipe.getSwipee());
     map.put(swipe.getSwiper(), matchList);
-//    System.out.println(matchList.get(matchList.size() - 1));
     }
   }
 }
