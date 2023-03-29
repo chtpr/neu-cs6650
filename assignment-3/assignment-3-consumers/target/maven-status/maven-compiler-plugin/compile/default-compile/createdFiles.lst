@@ -1,0 +1,5 @@
+dao/DBCPDataSource.class
+consumer/SwipeConsumer.class
+dao/SwipeDao.class
+model/Swipe.class
+consumer/ConsumerThread.class

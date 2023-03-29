@@ -42,11 +42,12 @@ public class GetServlet extends HttpServlet {
       res.setContentType("application/json");
       if (Objects.equals(urlParts[1], "matches")) {
         List<String> matchList = new ArrayList<>();
-        matchList.add("1");
-        MatchList list = new MatchList(matchList);
+        matchList.add("4");
+        matchList.add("5");
+        MatchList list = new MatchList(userID, matchList);
         res.getWriter().write(gson.toJson(list));
       } else {
-        LikesDislikes likesDislikes = new LikesDislikes(20, 10);
+        LikesDislikes likesDislikes = new LikesDislikes(userID,20, 10);
         res.getWriter().write(gson.toJson(likesDislikes));
       }
       res.setStatus(HttpServletResponse.SC_OK);

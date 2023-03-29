@@ -3,6 +3,7 @@ package servlet;
 import channelpool.RMQChannelFactory;
 import channelpool.RMQChannelPool;
 import com.google.gson.Gson;
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -99,7 +100,7 @@ public class TwinderServlet2 extends HttpServlet {
           swipeDetails.getSwipee(), swipeDetails.getComment());
       String swipeJson = gson.toJson(swipe);
       // if published, return success back to the client
-      if (publish(swipeJson)) {
+      if (durablePublish(swipeJson)) {
         res.setStatus(HttpServletResponse.SC_CREATED);
         res.getWriter().write(String.valueOf(res.getStatus()));
       } else {
@@ -160,6 +161,23 @@ public class TwinderServlet2 extends HttpServlet {
       Channel channel = pool.borrowObject();
       channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
       channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes());
+      pool.returnObject(channel);
+      return true;
+    } catch (Exception e) {
+      Logger.getLogger(TwinderServlet2.class.getName()).log(Level.INFO, null, e);
+      return false;
+    }
+  }
+
+  private boolean durablePublish(String message) {
+    try {
+      Channel channel = pool.borrowObject();
+      channel.exchangeDeclare(EXCHANGE_NAME, "direct", true);
+      channel.basicPublish(EXCHANGE_NAME, "",
+          new AMQP.BasicProperties.Builder()
+              .deliveryMode(2)
+              .build(),
+          message.getBytes());
       pool.returnObject(channel);
       return true;
     } catch (Exception e) {
