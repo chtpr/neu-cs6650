@@ -7,6 +7,9 @@ import java.util.List;
 import model.Swipe;
 import org.apache.commons.dbcp2.BasicDataSource;
 
+/**
+ * Swipe DAO that allows us to insert swipe records into the database
+ */
 public class SwipeDao {
   private static BasicDataSource dataSource;
 
@@ -14,6 +17,10 @@ public class SwipeDao {
     dataSource = DBCPDataSource.getDataSource();
   }
 
+  /**
+   * Inserts a single swipe into the database
+   * @param swipe the swipe object
+   */
   public void createSwipe(Swipe swipe) {
     Connection conn = null;
     PreparedStatement preparedStatement = null;
@@ -43,6 +50,10 @@ public class SwipeDao {
     }
   }
 
+  /**
+   * Inserts a list of swipes in a single batch to the database
+   * @param swipes list of swipes
+   */
   public void createSwipes(List<Swipe> swipes) {
     Connection conn = null;
     PreparedStatement preparedStatement = null;

@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Consumer class for likes and dislikes
+ * Consumer class for swipes
  */
 public class SwipeConsumer {
 
