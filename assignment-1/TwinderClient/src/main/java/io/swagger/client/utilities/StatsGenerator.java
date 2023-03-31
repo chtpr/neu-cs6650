@@ -39,5 +39,6 @@ public final class StatsGenerator {
     System.out.printf("Max latency: %f milliseconds%n", max);
     System.out.printf("Min latency: %f milliseconds%n", min);
     System.out.printf("99th percentile latency: %f milliseconds%n", p99);
+    System.out.println();
   }
 }

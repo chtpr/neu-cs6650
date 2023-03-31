@@ -9,12 +9,14 @@ package io.swagger.client.constants;
 public final class EnvironmentConstants {
   public static final String LOCAL_PATH = "http://localhost:8080/twinderservlet/";
   public static final String LOCAL_PATH_HW2 = "http://localhost:8080/twinderservlet2/";
-  public static final String IP_ADDRESS = "34.221.148.24";
-  public static final String IP_ADDRESS_2 = "54.245.140.162";
+  public static final String LOCAL_GET_PATH = "http://localhost:8080/getservlet/";
+  public static final String IP_ADDRESS = "54.213.134.163";
+  public static final String IP_ADDRESS_2 = "18.236.190.72";
   public static final String AWS_HW1 = String.format("http://%s:8080/twinderservlet/", IP_ADDRESS);
   public static final String SERVER_1 = String.format("http://%s:8080/twinderservlet2/", IP_ADDRESS);
   public static final String SERVER_2 = String.format("http://%s:8080/twinderservlet2/", IP_ADDRESS_2);
   public static final String LOAD_BALANCER = "http://tomcat-network-acff0945bf37a74d.elb.us-west-2.amazonaws.com/twinderservlet2/";
+  public static final String GET_SERVER = String.format("http://%s:8080/getservlet/", IP_ADDRESS_2);
   public static final int NUM_THREADS = 100;
   public static final int NUM_REQUESTS = 5000;
   public static final int TOTAL_REQUESTS = NUM_REQUESTS * NUM_THREADS;

@@ -1,7 +1,6 @@
 package io.swagger.client.part1;
 
 import static io.swagger.client.constants.EnvironmentConstants.ATTEMPTS;
-import static io.swagger.client.constants.EnvironmentConstants.LOAD_BALANCER;
 import static io.swagger.client.constants.EnvironmentConstants.NUM_REQUESTS;
 import static io.swagger.client.constants.EnvironmentConstants.SERVER_1;
 

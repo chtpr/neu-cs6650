@@ -16,6 +16,10 @@ public final class HttpInfoGenerator {
     return "right";
   }
 
+  public static String randomUser() {
+    return String.valueOf(ThreadLocalRandom.current().nextInt(0, 5001));
+  }
+
   public static SwipeDetails generateSwipeDetails() {
     SwipeDetails swipeDetails = new SwipeDetails();
     int swiperLimit = 5000;

@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import dao.SwipeDao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import model.MatchList;
 public class GetServlet extends HttpServlet {
 
   private static final Gson gson = new Gson();
+  private static final SwipeDao swipeDao = new SwipeDao();
 
   @Override
   protected void doGet(HttpServletRequest req,
@@ -38,17 +40,20 @@ public class GetServlet extends HttpServlet {
       // if valid, attempt to publish message to RabbitMQ
       // with swipe direction included in the message
     } else {
-      String userID = urlParts[2];
+      int userID = Integer.parseInt(urlParts[2]);
       res.setContentType("application/json");
       if (Objects.equals(urlParts[1], "matches")) {
-        List<String> matchList = new ArrayList<>();
-        matchList.add("4");
-        matchList.add("5");
-        MatchList list = new MatchList(userID, matchList);
-        res.getWriter().write(gson.toJson(list));
+//        List<String> matchList = new ArrayList<>();
+//        matchList.add("4");
+//        matchList.add("5");
+//        MatchList list = new MatchList(userID, matchList);
+//        res.getWriter().write(gson.toJson(list));
+        swipeDao.getMatchList(userID, res, gson);
+
       } else {
-        LikesDislikes likesDislikes = new LikesDislikes(userID,20, 10);
-        res.getWriter().write(gson.toJson(likesDislikes));
+//        LikesDislikes likesDislikes = new LikesDislikes(userID,20, 10);
+//        res.getWriter().write(gson.toJson(likesDislikes));
+        swipeDao.getLikesAndDislikes(userID, res, gson);
       }
       res.setStatus(HttpServletResponse.SC_OK);
     }
