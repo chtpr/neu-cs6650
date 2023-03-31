@@ -1,12 +1,15 @@
 package model;
 
-public class LikesDislikes {
+/**
+ * Model for match stats (likes and dislikes)
+ */
+public class MatchStats {
 
   private String userId;
   private int numLikes;
   private int numDislikes;
 
-  public LikesDislikes(String userId, int numLikes, int numDislikes) {
+  public MatchStats(String userId, int numLikes, int numDislikes) {
     this.userId = userId;
     this.numLikes = numLikes;
     this.numDislikes = numDislikes;

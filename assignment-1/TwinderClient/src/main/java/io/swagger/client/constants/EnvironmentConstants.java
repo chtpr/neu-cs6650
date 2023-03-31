@@ -10,8 +10,8 @@ public final class EnvironmentConstants {
   public static final String LOCAL_PATH = "http://localhost:8080/twinderservlet/";
   public static final String LOCAL_PATH_HW2 = "http://localhost:8080/twinderservlet2/";
   public static final String LOCAL_GET_PATH = "http://localhost:8080/getservlet/";
-  public static final String IP_ADDRESS = "54.213.134.163";
-  public static final String IP_ADDRESS_2 = "18.236.190.72";
+  public static final String IP_ADDRESS = "35.161.45.116";
+  public static final String IP_ADDRESS_2 = "52.13.123.82";
   public static final String AWS_HW1 = String.format("http://%s:8080/twinderservlet/", IP_ADDRESS);
   public static final String SERVER_1 = String.format("http://%s:8080/twinderservlet2/", IP_ADDRESS);
   public static final String SERVER_2 = String.format("http://%s:8080/twinderservlet2/", IP_ADDRESS_2);

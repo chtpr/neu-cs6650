@@ -2,6 +2,9 @@ package dao;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
+/**
+ * Establishes connection to the database
+ */
 public class DBCPDataSource {
   private static BasicDataSource dataSource;
 
@@ -24,10 +27,6 @@ public class DBCPDataSource {
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
-//    String url = String.format("jdbc:mysql://%s:%s/%s?serverTimezone=UTC", HOST_NAME, PORT, DATABASE);
-//    dataSource.setUrl(url);
-//    dataSource.setUsername(USERNAME);
-//    dataSource.setPassword(PASSWORD);
     String url = String.format("jdbc:mysql://%s:%s/%s?serverTimezone=UTC&rewriteBatchedStatements=true", AWS, PORT_AWS, DATABASE);
     dataSource.setUrl(url);
     dataSource.setUsername(ADMIN);

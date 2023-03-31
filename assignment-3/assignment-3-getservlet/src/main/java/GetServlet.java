@@ -1,21 +1,27 @@
 import com.google.gson.Gson;
 import dao.SwipeDao;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import model.LikesDislikes;
-import model.MatchList;
 
+/**
+ * Servlet for get requests that are sent to the database
+ */
 @WebServlet(name = "GetServlet", value = "/*")
 public class GetServlet extends HttpServlet {
 
   private static final Gson gson = new Gson();
   private static final SwipeDao swipeDao = new SwipeDao();
 
+  /**
+   * Executes our get method. Validates the URL and the request body. If valid,
+   * retrieves data from the database and sends a success response back to the
+   * client.
+   * @param req the HTTPServlet request
+   * @param res the HTTPServlet response
+   */
   @Override
   protected void doGet(HttpServletRequest req,
       HttpServletResponse res) throws ServletException, IOException {
@@ -37,23 +43,15 @@ public class GetServlet extends HttpServlet {
     // validate url path and request body
     if (!isUrlValid(urlParts)) {
       res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      // if valid, attempt to publish message to RabbitMQ
-      // with swipe direction included in the message
+      // if valid, depending on which API specified, will retrieve either
+      // the match list or the match stats from the database
     } else {
-      int userID = Integer.parseInt(urlParts[2]);
+      int userId = Integer.parseInt(urlParts[2]);
       res.setContentType("application/json");
       if (Objects.equals(urlParts[1], "matches")) {
-//        List<String> matchList = new ArrayList<>();
-//        matchList.add("4");
-//        matchList.add("5");
-//        MatchList list = new MatchList(userID, matchList);
-//        res.getWriter().write(gson.toJson(list));
-        swipeDao.getMatchList(userID, res, gson);
-
+        res.getWriter().write(gson.toJson(swipeDao.getMatches(userId)));
       } else {
-//        LikesDislikes likesDislikes = new LikesDislikes(userID,20, 10);
-//        res.getWriter().write(gson.toJson(likesDislikes));
-        swipeDao.getLikesAndDislikes(userID, res, gson);
+        res.getWriter().write(gson.toJson(swipeDao.getMatchStats(userId)));
       }
       res.setStatus(HttpServletResponse.SC_OK);
     }
