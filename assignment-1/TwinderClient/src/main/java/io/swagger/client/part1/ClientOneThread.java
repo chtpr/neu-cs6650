@@ -2,7 +2,7 @@ package io.swagger.client.part1;
 
 import static io.swagger.client.constants.EnvironmentConstants.ATTEMPTS;
 import static io.swagger.client.constants.EnvironmentConstants.NUM_REQUESTS;
-import static io.swagger.client.constants.EnvironmentConstants.SERVER_1;
+import static io.swagger.client.constants.EnvironmentConstants.TOMCAT_1;
 
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
@@ -29,7 +29,7 @@ public class ClientOneThread implements Runnable {
   @Override
   public void run() {
     ApiClient apiClient = new ApiClient();
-    apiClient.setBasePath(SERVER_1);
+    apiClient.setBasePath(TOMCAT_1);
     SwipeApi apiInstance = new SwipeApi(apiClient);
     for (int j = 0; j < NUM_REQUESTS; j++) {
       sendRequest(successCount, apiInstance);

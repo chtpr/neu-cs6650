@@ -1,9 +1,8 @@
 package io.swagger.client.part2;
 
 import static io.swagger.client.constants.EnvironmentConstants.ATTEMPTS;
-import static io.swagger.client.constants.EnvironmentConstants.LOAD_BALANCER;
 import static io.swagger.client.constants.EnvironmentConstants.NUM_REQUESTS;
-import static io.swagger.client.constants.EnvironmentConstants.SERVER_1;
+import static io.swagger.client.constants.EnvironmentConstants.TOMCAT_1;
 
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
@@ -34,7 +33,7 @@ public class ClientTwoThread implements Runnable {
   @Override
   public void run() {
     ApiClient apiClient = new ApiClient();
-    apiClient.setBasePath(SERVER_1);
+    apiClient.setBasePath(TOMCAT_1);
     SwipeApi apiInstance = new SwipeApi(apiClient);
     List<ResponseRecord> localSublist = Collections.synchronizedList(new ArrayList<>());
     for (int j = 0; j < NUM_REQUESTS; j++) {

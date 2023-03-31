@@ -11,21 +11,21 @@ public final class HttpInfoGenerator {
   private HttpInfoGenerator() {}
 
   public static String returnLeftOrRight() {
-    int num = ThreadLocalRandom.current().nextInt(0, 2);
+    int num = ThreadLocalRandom.current().nextInt( 2);
     if (num == 0) return "left";
     return "right";
   }
 
   public static String randomUser() {
-    return String.valueOf(ThreadLocalRandom.current().nextInt(0, 5001));
+    return String.valueOf(ThreadLocalRandom.current().nextInt( 5001));
   }
 
   public static SwipeDetails generateSwipeDetails() {
     SwipeDetails swipeDetails = new SwipeDetails();
     int swiperLimit = 5000;
     int swipeeLimit = 1000000;
-    swipeDetails.setSwiper(String.valueOf(ThreadLocalRandom.current().nextInt(0, swiperLimit + 1)));
-    swipeDetails.setSwipee(String.valueOf(ThreadLocalRandom.current().nextInt(0, swipeeLimit + 1)));
+    swipeDetails.setSwiper(String.valueOf(ThreadLocalRandom.current().nextInt( swiperLimit + 1)));
+    swipeDetails.setSwipee(String.valueOf(ThreadLocalRandom.current().nextInt( swipeeLimit + 1)));
     swipeDetails.setComment(returnRandomString());
     return swipeDetails;
   }
