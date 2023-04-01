@@ -31,8 +31,8 @@ public class DBCPDataSource {
     dataSource.setUrl(url);
     dataSource.setUsername(ADMIN);
     dataSource.setPassword(AWS_PASSWORD);
-    dataSource.setInitialSize(10);
-    dataSource.setMaxTotal(60);
+    dataSource.setInitialSize(5);
+    dataSource.setMaxTotal(10);
   }
 
   public static BasicDataSource getDataSource() {

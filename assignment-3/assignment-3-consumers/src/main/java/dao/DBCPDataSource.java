@@ -32,7 +32,7 @@ public class DBCPDataSource {
     dataSource.setUsername(ADMIN);
     dataSource.setPassword(AWS_PASSWORD);
     dataSource.setInitialSize(10);
-    dataSource.setMaxTotal(60);
+    dataSource.setMaxTotal(30);
   }
 
   public static BasicDataSource getDataSource() {
